@@ -9,7 +9,7 @@ type baseResponse struct {
 }
 
 func response(c *fiber.Ctx, responseCode int, message string, data interface{}) error {
-	return c.JSON(&baseResponse{
+	return c.Status(responseCode).JSON(&baseResponse{
 		Code:    responseCode,
 		Message: message,
 		Data:    data,

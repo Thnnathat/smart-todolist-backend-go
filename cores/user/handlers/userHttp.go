@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/Thnnathat/smart-todolist-backend-go/cores/errors"
 	"github.com/Thnnathat/smart-todolist-backend-go/cores/user/entities"
 	"github.com/Thnnathat/smart-todolist-backend-go/cores/user/usecases"
 	"github.com/gofiber/fiber/v2"
@@ -28,4 +29,22 @@ func (h *userHttpHandler) CreateUser(c *fiber.Ctx) error {
 	}
 
 	return response(c, fiber.StatusCreated, "Success", reqBody)
+}
+
+func (h *userHttpHandler) DeleteUser(c *fiber.Ctx) error {
+	var userId string = c.Params("id")
+
+	err := h.userUsecase.DeleteUser(userId)
+
+	if err != nil {
+		log.Errorf("Delete user failed: %v", err)
+		switch err {
+		case errors.ErrNotfound:
+			return response(c, fiber.StatusNotFound, "User not found.", nil)
+		default:
+			return response(c, fiber.StatusInternalServerError, "Internal server error.", nil)
+		}
+	}
+
+	return response(c, fiber.StatusOK, "Delete user successful.", nil)
 }

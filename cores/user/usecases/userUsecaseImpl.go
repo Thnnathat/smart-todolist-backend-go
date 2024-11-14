@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"github.com/Thnnathat/smart-todolist-backend-go/cores/errors"
 	"github.com/Thnnathat/smart-todolist-backend-go/cores/user/entities"
 	"github.com/Thnnathat/smart-todolist-backend-go/cores/user/repositories"
 	"golang.org/x/crypto/bcrypt"
@@ -28,7 +29,25 @@ func (u *userUsecaseImpl) CreateUser(user *entities.User) error {
 
 	createUser.Password = string(hashedPassword)
 
-	if err := u.userRepository.SaveUser(createUser); err != nil {
+	if err := u.userRepository.Save(createUser); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *userUsecaseImpl) DeleteUser(id string) error {
+	user, err := u.userRepository.GetById(id)
+
+	if err != nil {
+		return err
+	}
+
+	if user == nil {
+		return errors.ErrNotfound
+	}
+
+	if err := u.userRepository.Delete(id); err != nil {
 		return err
 	}
 

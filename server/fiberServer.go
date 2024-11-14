@@ -65,4 +65,5 @@ func (s *fiberServer) initializeUserHttpHandler() {
 	//routers
 	userRouter := api.Group("/users")
 	userRouter.Post("", userHttpHandler.CreateUser)
+	userRouter.Delete("/:id", userHttpHandler.DeleteUser)
 }
