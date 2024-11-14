@@ -5,7 +5,6 @@ import (
 	"github.com/Thnnathat/smart-todolist-backend-go/cores/user/entities"
 	"github.com/Thnnathat/smart-todolist-backend-go/cores/user/usecases"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 )
 
 type userHttpHandler struct {
@@ -20,7 +19,6 @@ func (h *userHttpHandler) CreateUser(c *fiber.Ctx) error {
 	reqBody := new(entities.User)
 
 	if err := c.BodyParser(reqBody); err != nil {
-		log.Errorf("Error parse request body: %v", err)
 		return response(c, fiber.StatusBadRequest, "Bad request", reqBody)
 	}
 
@@ -28,7 +26,7 @@ func (h *userHttpHandler) CreateUser(c *fiber.Ctx) error {
 		return response(c, fiber.StatusInternalServerError, "Create user failed", reqBody)
 	}
 
-	return response(c, fiber.StatusCreated, "Success", reqBody)
+	return response(c, fiber.StatusCreated, "User created successfully", reqBody)
 }
 
 func (h *userHttpHandler) DeleteUser(c *fiber.Ctx) error {
@@ -37,14 +35,13 @@ func (h *userHttpHandler) DeleteUser(c *fiber.Ctx) error {
 	err := h.userUsecase.DeleteUser(userId)
 
 	if err != nil {
-		log.Errorf("Delete user failed: %v", err)
 		switch err {
 		case errors.ErrNotfound:
-			return response(c, fiber.StatusNotFound, "User not found.", nil)
+			return response(c, fiber.StatusNotFound, "User not found", nil)
 		default:
-			return response(c, fiber.StatusInternalServerError, "Internal server error.", nil)
+			return response(c, fiber.StatusInternalServerError, "Internal server error", nil)
 		}
 	}
 
-	return response(c, fiber.StatusOK, "Delete user successful.", nil)
+	return response(c, fiber.StatusOK, "Delete user successful", nil)
 }

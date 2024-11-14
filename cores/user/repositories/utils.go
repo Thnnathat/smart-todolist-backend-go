@@ -9,8 +9,6 @@ func gormIdConv(id string) (uint, error) {
 	}
 
 	idUint := uint(idInt)
-	if err != nil {
-		return 0, err
-	}
+
 	return idUint, nil
 }

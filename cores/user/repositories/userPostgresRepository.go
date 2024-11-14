@@ -5,7 +5,6 @@ import (
 
 	"github.com/Thnnathat/smart-todolist-backend-go/cores/user/entities"
 	"github.com/Thnnathat/smart-todolist-backend-go/database"
-	"github.com/gofiber/fiber/v2/log"
 )
 
 type userPostgresRepository struct {
@@ -25,11 +24,9 @@ func (r *userPostgresRepository) Save(user *entities.User) error {
 	result := r.db.GetDb().Create(data)
 
 	if result.Error != nil {
-		log.Errorf("Save User Data: %v", result.Error)
 		return result.Error
 	}
 
-	log.Debugf("Save User Data: %v", result.RowsAffected)
 	return nil
 }
 
@@ -37,18 +34,15 @@ func (r *userPostgresRepository) Delete(id string) error {
 	var userId, err = strconv.Atoi(id)
 
 	if err != nil {
-		log.Errorf("Convert User id: %v", err)
 		return err
 	}
 
 	result := r.db.GetDb().Delete(&entities.User{}, uint(userId))
 
 	if result.Error != nil {
-		log.Errorf("Delete User Data: %v", result.Error)
 		return err
 	}
 
-	log.Debugf("Delete User Data: %v", result.RowsAffected)
 	return nil
 }
 
